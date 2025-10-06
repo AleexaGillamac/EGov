@@ -33,6 +33,7 @@ import { getInitials } from '@/composables/useInitials';
 import { toUrl, urlIsActive } from '@/lib/utils';
 import { dashboard } from '@/routes';
 import { index } from '@/routes/offices';
+// import { index } from '@/routes/employees';
 import type { BreadcrumbItem, NavItem } from '@/types';
 import { InertiaLinkProps, Link, usePage } from '@inertiajs/vue3';
 import { BookOpen, Folder, Landmark, LayoutGrid, Menu, Search } from 'lucide-vue-next';
@@ -69,6 +70,11 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Offices',
+        href: index(),
+        icon: Landmark,
+    },
+    {
+        title: 'Employees',
         href: index(),
         icon: Landmark,
     },

@@ -1,54 +1,69 @@
 <script setup lang="ts">
-import AppLayout from '@/layouts/AppLayout.vue';
-import { dashboard } from '@/routes';
-import { type BreadcrumbItem } from '@/types';
-import { Head, Link, usePage} from '@inertiajs/vue3';
-import { index, create } from '@/routes/offices';
-import Button from '@/components/ui/button/Button.vue';
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'; 
+import AppLayout from '@/layouts/AppLayout.vue'
+import { Head, Link, router, usePage } from '@inertiajs/vue3'
+import { create } from '@/routes/offices'
+import Button from '@/components/ui/button/Button.vue'
+import type { ColumnDef } from '@tanstack/vue-table'
+import DataTable from '@/components/offices/DataTable.vue'
+import { edit, destroy } from '@/routes/offices'
+import { h } from 'vue'
+const props = defineProps<{ offices: { id: number; name: string }[] }>()
 
-const breadcrumbs: BreadcrumbItem[] = [
+
+// Define your table columns
+const columns: ColumnDef<{ id: number; name: string }>[] = [
      {
-          title: 'Offices',
-          href: index().url,
+          accessorKey: 'id',
+          header: 'ID',
+          cell: info => info.getValue(),
      },
-];
+     {
+          accessorKey: 'name',
+          header: 'Name',
+          cell: info => info.getValue(),
+     },
 
-const page = usePage();
-
-interface DataTableProps<TData, TValue> {
-     columns: ColumnDef<TData, TValue>[]
-     data: TData[]
-}
-
-export function DataTable<TData, TValue>({
-     columns,
-     data,
-}: DataTableProps<TData, TValue>) {
-     const table = useReactTable({
-          data,
-          columns,
-          getCoreRowModel: getCoreRowModel(),
-     })
+     {
+          accessorKey: 'Action',
+          header: 'Action',
+          cell: ({ row }) => {
+               const offices = row.original
+               return h('div', { class: 'flex gap-2' }, [
+                    h(Button, {
+                         class: '',
+                         // onclick: () => router.visit(`/offices/${offices.id}/edit`)
+                    }),
+                    h(Button, {
+                         class: '',
+                         // onclick: () => router.delete('/offices/${offices.id}')
+                    })
+               ])
+          }
+     }
+]
 </script>
 
 <template>
 
-     <Head title="Dashboard" />
+     <Head title="Offices" />
 
-     <AppLayout :breadcrumbs="breadcrumbs">
-          <Alert variant="default">
-               <Terminal />
-               <AlertTitle>Success!</AlertTitle>
-               <AlertDescription>
-                    <div v-if="$page.props.flash?.message" class="alert">
-                         {{ $page.props.flash.message }}
-                    </div>
-               </AlertDescription>
-          </Alert>
-          <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-               <Link :href="create()"><Button>Create Offices</Button></Link>
+     <AppLayout>
+          <div class="flex flex-col md:flex-row justify-between items-center mb-6 space-y-4 md:space-y-0">
+               <!-- Page Title -->
+               <div>
+                    <h1 class="text-3xl font-semibold text-gray-800">Offices</h1>
+                    <p class="text-gray-500 mt-1">Manage all office departments here</p>
+               </div>
+
+               <!-- Create Office Button -->
+               <Link :href="create()">
+               <Button class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                    Create Office
+               </Button>
+               </Link>
+          </div>
+          <div class="bg-white shadow rounded-md p-4">
+               <DataTable :data="props.offices" :columns="columns" />
           </div>
      </AppLayout>
 </template>

@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
-import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
-import { Head, Form, useForm } from '@inertiajs/vue3';
+import { Head, Form, useForm, router, usePage } from '@inertiajs/vue3';
 import { create, store } from '@/routes/offices';
 import Input from '@/components/ui/input/Input.vue';
 import Button from '@/components/ui/button/Button.vue';
 import { handleError } from 'vue';
+
+
 
 const breadcrumbs: BreadcrumbItem[] = [
      {
@@ -20,6 +21,7 @@ const form = useForm({
      description: '',
 });
 
+
 </script>
 
 <template>
@@ -31,6 +33,7 @@ const form = useForm({
                <h1>Create Offices</h1>
                <Form  :action="store()" 
                method="POST" 
+               
                disable-while-processing
                class="w-8/12 space-y-3.5">
                     <div class="space-y-2">
@@ -47,5 +50,6 @@ const form = useForm({
                     <Button type="submit" >Add Office</Button>
                </Form>
           </div>
+
      </AppLayout>
 </template>
